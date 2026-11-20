@@ -1,7 +1,5 @@
 import logging
 import os
-from datetime import time
-import pytz
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 from telegram.ext import (
     ApplicationBuilder,
@@ -17,7 +15,7 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-TOKEN = "9278969559:AAHO9ABkw6QPyNUcS_No7eZRtn7h58K7_rE"
+TOKEN = "9278969559:AAH09ABkw6QPyNUcs_No7eZRtn7h58K7_rE"
 SUPPORT_CONTACT = "+971544048575"
 ORDER_FILE = "order_number.txt"
 USERS_FILE = "users.txt"
@@ -265,27 +263,8 @@ async def cancel(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data.clear()
     return ConversationHandler.END
 
-async def daily_broadcast_job(context: ContextTypes.DEFAULT_TYPE):
-    users = load_users()
-    message_text = (
-        "ساعت ۱۱ شد! نرخ‌های جدید رسید.\n\n"
-        "اگر امروز حواله یا تبدیل ارزی دارید، صرافی ما با بهترین نرخ و سریع‌ترین زمان در خدمت شماست.\n"
-        "برای شروع کار کافیست دکمه ثبت سفارش را بزنید یا با ما در ارتباط باشید."
-    )
-    for user_str in users:
-        try:
-            user_id = int(user_str)
-            await context.bot.send_message(chat_id=user_id, text=message_text)
-        except Exception as e:
-            logging.error(f"خطا در ارسال پیام گروهی به کاربر {user}: {e}")
-
 if __name__ == '__main__':
     application = ApplicationBuilder().token(TOKEN).build()
-
-    job_queue = application.job_queue
-    iran_tz = pytz.timezone('Asia/Tehran')
-    broadcast_time = time(hour=11, minute=0, second=0, tzinfo=iran_tz)
-    job_queue.run_daily(daily_broadcast_job, broadcast_time)
 
     non_cancel_text = filters.TEXT & ~filters.COMMAND & ~filters.Regex("^(انصراف و لغو)$")
 
