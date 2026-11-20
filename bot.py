@@ -12,7 +12,6 @@ from telegram.ext import (
     filters,
 )
 
-# تنظیمات لاگین
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
@@ -24,6 +23,9 @@ ORDER_FILE = "order_number.txt"
 USERS_FILE = "users.txt"
 ADMIN_USERNAME = "arzparss"
 ADMIN_CHAT_ID_FILE = "admin_chat_id.txt"
+
+PORT = int(os.environ.get("PORT", "10000"))
+WEBHOOK_URL = "https://bot-arz.onrender.com"
 
 def load_admin_chat_id():
     if os.path.exists(ADMIN_CHAT_ID_FILE):
@@ -306,10 +308,15 @@ if __name__ == '__main__':
     application.add_handler(conv_handler)
     application.add_handler(CommandHandler('start', start))
     application.add_handler(MessageHandler(filters.Regex('^نرخ لحظه‌ای$'), live_rates))
-    application.add_handler(MessageHandler(filters.Regex('^پیگیری سفارش$'), track_query))
+    application.add_handler(MessageHandler(filters.Regex('^پیگیری سفارش$'), track_order))
     application.add_handler(MessageHandler(filters.Regex('^ارتباط با ما$'), contact_us))
     application.add_handler(MessageHandler(filters.Regex('^درباره ما$'), about_us))
 
     application.add_handler(MessageHandler(filters.ALL & ~filters.COMMAND, forward_to_admin))
 
-    application.run_polling()
+    application.run_webhook(
+        listen="0.0.0.0",
+        port=PORT,
+        url_path=TOKEN,
+        webhook_url=f"{WEBHOOK_URL}/{TOKEN}"
+    )
