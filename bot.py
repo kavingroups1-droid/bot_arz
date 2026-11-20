@@ -15,7 +15,7 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-TOKEN = "9278969559:AAHqZAg4ifKbVp48iZE2GzodTij65ooxs0U"
+TOKEN = "9278969559:AAFW3xpkcgYAKdJy31SCpa7DqIF1UtfJDcY"
 SUPPORT_CONTACT = "+971544048575"
 ORDER_FILE = "order_number.txt"
 USERS_FILE = "users.txt"
